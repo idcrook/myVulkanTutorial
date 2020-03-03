@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 project( myVulkanTutorial )
 
-message("\nTOP PROJECT = " "${CMAKE_PROJECT_NAME}")
+# message("\nTOP PROJECT = " "${CMAKE_PROJECT_NAME}")
 message("PROJECT_NAME = " "${PROJECT_NAME}")
 
 set(CMAKE_MODULE_PATH
@@ -10,9 +10,9 @@ set(CMAKE_MODULE_PATH
   ${CMAKE_MODULE_PATH}
   )
 
-message("CMAKE_PREFIX_PATH    = " "${CMAKE_PREFIX_PATH}")
-message("CMAKE_MODULE_PATH    = " "${CMAKE_MODULE_PATH}")
-message("CMAKE_BUILD_TYPE     = " "${CMAKE_BUILD_TYPE}")
+# message("CMAKE_PREFIX_PATH    = " "${CMAKE_PREFIX_PATH}")
+# message("CMAKE_MODULE_PATH    = " "${CMAKE_MODULE_PATH}")
+# message("CMAKE_BUILD_TYPE     = " "${CMAKE_BUILD_TYPE}")
 
 # Set to c++17 (std::optional, )
 set(CMAKE_CXX_STANDARD 17)
@@ -26,8 +26,16 @@ endif()
 find_package(Vulkan REQUIRED)
 find_package(GLFW   REQUIRED) # ../CMake/FindGLFW.cmake
 
-set( HEADERS
-  )
+
+find_program(Vulkan_GLSLC_EXECUTABLE
+      NAMES glslc
+      )
+
+# message("Vulkan_GLSLC_EXECUTABLE     = " "${Vulkan_GLSLC_EXECUTABLE}")
+
+# message("Vulkan_INCLUDE_DIR   = " "${Vulkan_INCLUDE_DIR}")
+# message("Vulkan_LIBRARY       = " "${Vulkan_LIBRARY}")
+# message("GLFW_INCLUDE_DIR     = " "${GLFW_INCLUDE_DIR}")
 
 set( SOURCES
   # code/00_base_code.cpp
@@ -64,23 +72,63 @@ set( SOURCES
   # code/29_multisampling.cpp
   )
 
-# FIXME: incorporate into cmake the shader files and compiling them
-  # code/09_shader_base.frag
-  # code/09_shader_base.vert
-  # code/17_shader_vertexbuffer.frag
-  # code/17_shader_vertexbuffer.vert
-  # code/26_shader_depth.frag
-  # code/26_shader_depth.vert
-  # code/25_shader_textures.frag
-  # code/25_shader_textures.vert
+# Expect only one shader per category to be active at a time
+set (VERTEX_SHADER
+  ${CMAKE_SOURCE_DIR}/shaders/09_shader_base.vert
+  # ${CMAKE_SOURCE_DIR}/shaders/17_shader_vertexbuffer.vert
+  # ${CMAKE_SOURCE_DIR}/shaders/25_shader_textures.vert
+  # ${CMAKE_SOURCE_DIR}/shaders/26_shader_depth.vert
+  )
 
-message("Vulkan_INCLUDE_DIR   = " "${Vulkan_INCLUDE_DIR}")
-message("GLFW_INCLUDE_DIR     = " "${GLFW_INCLUDE_DIR}")
+set (FRAGMENT_SHADER
+  ${CMAKE_SOURCE_DIR}/shaders/09_shader_base.frag
+  # ${CMAKE_SOURCE_DIR}/shaders/17_shader_vertexbuffer.frag
+  # ${CMAKE_SOURCE_DIR}/shaders/25_shader_textures.frag
+  # ${CMAKE_SOURCE_DIR}/shaders/26_shader_depth.frag
+  )
+
+
+FUNCTION(add_shader_spv TARGET)
+  set(options "")
+  set(oneValueArgs OUTPUT_PATH SOURCE SHADER_STAGE)
+  set(multiValueArgs DEPENDENCIES)
+
+  CMAKE_PARSE_ARGUMENTS(PARSE_ARGV 1 GLSLC_COMPILE_TO_SPV "${options}" "${oneValueArgs}" "${multiValueArgs}")
+  message(STATUS "SOURCE      = " "${GLSLC_COMPILE_TO_SPV_SOURCE}")
+  #message(STATUS "OUTPUT_PATH = " "${GLSLC_COMPILE_TO_SPV_OUTPUT_PATH}")
+
+  # assumed to be only one
+  FOREACH(input ${GLSLC_COMPILE_TO_SPV_SOURCE})
+
+    # Add a custom command to compile GLSL to SPIR-V.
+    add_custom_command(
+      OUTPUT  "${GLSLC_COMPILE_TO_SPV_OUTPUT_PATH}"
+      COMMAND ${Vulkan_GLSLC_EXECUTABLE} -o "${GLSLC_COMPILE_TO_SPV_OUTPUT_PATH}" "${input}"
+      MAIN_DEPENDENCY "${input}"
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      )
+
+    set_source_files_properties(${GLSLC_COMPILE_TO_SPV_OUTPUT_PATH} PROPERTIES GENERATED TRUE)
+    target_sources(${TARGET} PRIVATE  "${GLSLC_COMPILE_TO_SPV_OUTPUT_PATH}")
+  ENDFOREACH( )
+ENDFUNCTION()
+
 
 add_executable(vulTut
-  ${HEADERS}
   ${SOURCES}
 )
+
+add_shader_spv(vulTut
+  SOURCE "${VERTEX_SHADER}"
+  SHADER_STAGE vert
+  OUTPUT_PATH "${CMAKE_SOURCE_DIR}/shaders/vert.spv"
+  )
+
+add_shader_spv(vulTut
+  SOURCE "${FRAGMENT_SHADER}"
+  SHADER_STAGE frag
+  OUTPUT_PATH "${CMAKE_SOURCE_DIR}/shaders/frag.spv"
+  )
 
 target_link_libraries(vulTut PUBLIC
   Vulkan::Vulkan
