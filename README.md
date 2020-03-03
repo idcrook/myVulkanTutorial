@@ -7,6 +7,8 @@ pre-reqs
 --------
 
 1.	Vulkan SDK (lib and headers) installed
+	-	For me this was installing Vulkan 1.2 Developer Beta Driver
+	-	From https://developer.nvidia.com/vulkan-driver
 2.	glfw3 lib and headers installed
 3.	GLM lib and headers installed
 4.	build tool CMake installed
