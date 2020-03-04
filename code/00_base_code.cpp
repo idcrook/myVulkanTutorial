@@ -23,6 +23,7 @@ private:
     void initWindow() {
         glfwInit();
 
+        // Do not create OpenGL context
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 

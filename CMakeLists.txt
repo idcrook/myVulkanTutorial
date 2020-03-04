@@ -45,7 +45,7 @@ set( SOURCES
   # code/04_logical_device.cpp
   # code/05_window_surface.cpp
   # code/06_swap_chain_creation.cpp
-  # code/07_image_views.cpp
+  code/07_image_views.cpp
   # code/08_graphics_pipeline.cpp
   # code/09_shader_modules.cpp
   # code/10_fixed_functions.cpp
@@ -53,7 +53,7 @@ set( SOURCES
   # code/12_graphics_pipeline_complete.cpp
   # code/13_framebuffers.cpp
   # code/14_command_buffers.cpp
-  code/15_hello_triangle.cpp
+  # code/15_hello_triangle.cpp
   # code/16_swap_chain_recreation.cpp
   # code/17_vertex_input.cpp
   # code/18_vertex_buffer.cpp

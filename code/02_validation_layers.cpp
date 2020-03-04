@@ -73,6 +73,7 @@ private:
 
     void cleanup() {
         if (enableValidationLayers) {
+            // this destroy being performed is checked by validation layer
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
         }
 
@@ -104,16 +105,17 @@ private:
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 
+        // keep in function scope outside the following if block
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
         if (enableValidationLayers) {
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             createInfo.ppEnabledLayerNames = validationLayers.data();
-
             populateDebugMessengerCreateInfo(debugCreateInfo);
+            // allow debugging of vkCreateInstance / vkDestroyInstance
             createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
         } else {
             createInfo.enabledLayerCount = 0;
-            
+
             createInfo.pNext = nullptr;
         }
 
@@ -128,6 +130,7 @@ private:
         createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
         createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         createInfo.pfnUserCallback = debugCallback;
+        createInfo.pUserData = nullptr; // Optional
     }
 
     void setupDebugMessenger() {
@@ -166,6 +169,7 @@ private:
             bool layerFound = false;
 
             for (const auto& layerProperties : availableLayers) {
+                //std::cerr << "\t" << layerProperties.layerName << std::endl;
                 if (strcmp(layerName, layerProperties.layerName) == 0) {
                     layerFound = true;
                     break;
@@ -180,9 +184,16 @@ private:
         return true;
     }
 
-    static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
-        std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+    static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+        VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+        VkDebugUtilsMessageTypeFlagsEXT messageType,
+        const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+        void* pUserData) {
 
+        std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+        //std::cerr << "        severity: " << messageSeverity << " vs WARNING " << VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT << std::endl;
+
+        // Return VK_FALSE unless we are testing the validation layers themselves
         return VK_FALSE;
     }
 };

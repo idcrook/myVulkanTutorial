@@ -24,6 +24,24 @@ sudo apt install libglm-dev
 Build (cmake)
 -------------
 
+DEBUG
+
+```
+cmake \
+    -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_BUILD_TYPE=Debug \
+    -B build .
+
+# build
+VERBOSE=1 cmake --build build --target vulTut --parallel 7 --clean-first
+# (inspect CMakeLists.txt for what will be built)
+
+# run
+build/vulTut
+
+```
+
+RELEASE
+
 ```shell
 # generate
 cmake \
@@ -31,8 +49,7 @@ cmake \
     -B build .
 
 # build
-VERBOSE=1 cmake --build build --target vulTut --parallel 7 --clean-first
-# (inspect CMakeLists.txt for what will be built)
+cmake --build build --target vulTut --parallel 7
 
 # run
 build/vulTut

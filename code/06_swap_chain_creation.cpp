@@ -277,8 +277,10 @@ private:
         createInfo.imageFormat = surfaceFormat.format;
         createInfo.imageColorSpace = surfaceFormat.colorSpace;
         createInfo.imageExtent = extent;
-        createInfo.imageArrayLayers = 1;
+        createInfo.imageArrayLayers = 1; // always 1 unless it is a stereoscopic 3D application
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        //     VK_IMAGE_USAGE_TRANSFER_DST_BIT would be with a post-processed
+        // image with a memopry operation to copy to swap chain image
 
         QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
         uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
@@ -289,13 +291,17 @@ private:
             createInfo.pQueueFamilyIndices = queueFamilyIndices;
         } else {
             createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+            createInfo.queueFamilyIndexCount = 0; // Optional
+            createInfo.pQueueFamilyIndices = nullptr; // Optional
         }
-
+        // .currentTransform means no transformation wanted
         createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
+        // this will ignore alpha for belnding with other windows-system windows
         createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
         createInfo.presentMode = presentMode;
+        // if TRUE means we are OK dropping pixels that are obscured- e.g. another window in front
         createInfo.clipped = VK_TRUE;
-
+        // for this version, only are ever creating oner swap chain (no window resizing, etc.)
         createInfo.oldSwapchain = VK_NULL_HANDLE;
 
         if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {

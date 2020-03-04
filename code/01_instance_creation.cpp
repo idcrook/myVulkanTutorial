@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <cstdlib>
+#include <vector>
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -65,6 +66,12 @@ private:
         uint32_t glfwExtensionCount = 0;
         const char** glfwExtensions;
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+        // for (int i=0; i < glfwExtensionCount; i++) {
+        //     std::cerr << i << ": " << glfwExtensions[i] << std::endl;
+        // }
+        // 0: VK_KHR_surface
+        // 1: VK_KHR_xcb_surface
+        // _availableVkExtensions();
 
         createInfo.enabledExtensionCount = glfwExtensionCount;
         createInfo.ppEnabledExtensionNames = glfwExtensions;
@@ -75,6 +82,21 @@ private:
             throw std::runtime_error("failed to create instance!");
         }
     }
+
+    void _availableVkExtensions() {
+        uint32_t extensionCount = 0;
+        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+        std::vector<VkExtensionProperties> extensions(extensionCount);
+
+        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+        std::cerr << "INFO: available extensions:" << std::endl;
+
+        for (const auto& extension : extensions) {
+            std::cerr << "\t" << extension.extensionName << std::endl;
+        }
+    }
+
+
 };
 
 int main() {

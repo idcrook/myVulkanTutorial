@@ -177,6 +177,36 @@ private:
     }
 
     bool isDeviceSuitable(VkPhysicalDevice device) {
+        // VkPhysicalDeviceProperties physicalDeviceProperties;
+        // vkGetPhysicalDeviceProperties(device, &physicalDeviceProperties);
+
+        // std::cerr << "INFO: Device Name:         " <<  physicalDeviceProperties.deviceName    << std::endl;
+        // std::cerr << "INFO: Device Type:         " <<  physicalDeviceProperties.deviceType    ;
+        // if( physicalDeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU  )  std::cerr << " (Discrete GPU)";
+        // if( physicalDeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU)  std::cerr << " (Integrated GPU)";
+        // if( physicalDeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU   )  std::cerr << " (Virtual GPU)";
+        // if( physicalDeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_CPU           )  std::cerr << " (CPU)";
+        // std::cerr << std::endl;
+        // // 10|8|8|6 bits of  VkPhysicalDeviceProperties::driverVersion map to major|minor|secondary_branch|tertiary_branch
+        // int major,minor,patch,branch;
+        // major =  (physicalDeviceProperties.driverVersion & 0xFFC00000) >> 22;
+        // minor =  (physicalDeviceProperties.driverVersion & 0x003FC000) >> 14;
+        // patch =  (physicalDeviceProperties.driverVersion & 0x00003FC0) >>  6;
+        // branch = (physicalDeviceProperties.driverVersion & 0x0000003F);
+        // std::cerr << "INFO: Driver Version:      " << major << '.' << minor << '.' << patch << '-' << branch
+        //           << " (" << physicalDeviceProperties.driverVersion << ')' << std::endl;
+        // fprintf(stderr, "INFO: Vulkan API Version: %d.%d.%d\n",
+        //         VK_VERSION_MAJOR(physicalDeviceProperties.apiVersion),
+        //         VK_VERSION_MINOR(physicalDeviceProperties.apiVersion),
+        //         VK_VERSION_PATCH(physicalDeviceProperties.apiVersion));
+		// INFO: Device Name:         GeForce RTX 2070 SUPER
+		// INFO: Device Type:         2 (Discrete GPU)
+		// INFO: Driver Version:      440.58.2-0 (1846444160)
+		// INFO: Vulkan API Version: 1.2.132
+
+        // VkPhysicalDeviceFeatures deviceFeatures;
+        // vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
         QueueFamilyIndices indices = findQueueFamilies(device);
 
         return indices.isComplete();
