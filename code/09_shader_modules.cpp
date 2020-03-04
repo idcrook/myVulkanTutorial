@@ -354,7 +354,9 @@ private:
         vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
         vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
         vertShaderStageInfo.module = vertShaderModule;
+        // set entrypoint
         vertShaderStageInfo.pName = "main";
+        // optional member .pSpecializationInfo, set to nullptr in this example
 
         VkPipelineShaderStageCreateInfo fragShaderStageInfo = {};
         fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -364,6 +366,7 @@ private:
 
         VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
 
+        // in this example, if these are not destroyed, it is a validation layer error
         vkDestroyShaderModule(device, fragShaderModule, nullptr);
         vkDestroyShaderModule(device, vertShaderModule, nullptr);
     }
@@ -541,6 +544,9 @@ private:
     }
 
     static std::vector<char> readFile(const std::string& filename) {
+        // The advantage of starting to read at the end of the file is that we
+        // can use the read position to determine the size of the file and
+        // allocate a buffer:
         std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
         if (!file.is_open()) {
@@ -548,6 +554,7 @@ private:
         }
 
         size_t fileSize = (size_t) file.tellg();
+        //std::cerr << "Read file " << filename << " (" << fileSize << " bytes)" << std::endl;
         std::vector<char> buffer(fileSize);
 
         file.seekg(0);

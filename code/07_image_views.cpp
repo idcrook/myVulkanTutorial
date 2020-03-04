@@ -325,10 +325,12 @@ private:
             createInfo.image = swapChainImages[i];
             createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
             createInfo.format = swapChainImageFormat;
+            // the default mappings
             createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
             createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
             createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
             createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+            // used as color targets without any mipmapping levels or multiple layers (no steroscopic)
             createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
             createInfo.subresourceRange.baseMipLevel = 0;
             createInfo.subresourceRange.levelCount = 1;
