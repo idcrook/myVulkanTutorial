@@ -104,6 +104,7 @@ private:
     std::vector<VkFence> imagesInFlight;
     size_t currentFrame = 0;
 
+    // used to signal from glfw
     bool framebufferResized = false;
 
     void initWindow() {
@@ -151,6 +152,7 @@ private:
             vkDestroyFramebuffer(device, framebuffer, nullptr);
         }
 
+        // free here, instead of destroying the command pool
         vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
         vkDestroyPipeline(device, graphicsPipeline, nullptr);
@@ -191,6 +193,7 @@ private:
 
     void recreateSwapChain() {
         int width = 0, height = 0;
+        // get current windows size
         glfwGetFramebufferSize(window, &width, &height);
         while (width == 0 || height == 0) {
             glfwGetFramebufferSize(window, &width, &height);
@@ -679,6 +682,7 @@ private:
         uint32_t imageIndex;
         VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
 
+        // vulkan will just tell us with code that swapChain is out of date
         if (result == VK_ERROR_OUT_OF_DATE_KHR) {
             recreateSwapChain();
             return;
@@ -776,6 +780,7 @@ private:
             return capabilities.currentExtent;
         } else {
             int width, height;
+            // get current windows size
             glfwGetFramebufferSize(window, &width, &height);
 
             VkExtent2D actualExtent = {
