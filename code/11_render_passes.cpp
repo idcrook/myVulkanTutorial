@@ -350,25 +350,36 @@ private:
         }
     }
 
-    void createRenderPass() {
+    void createRenderPass() {// a single color buffer attachment represented as one of the images from the swap chain
         VkAttachmentDescription colorAttachment = {};
         colorAttachment.format = swapChainImageFormat;
         colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+        // determines what to do with existing data in the attachment
+        // before rendering - in this case will be clearing to black
         colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        // after rendering
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+        // not doing anything with stencil buffer
         colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        // do not care which previous layout was in
         colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        // want to use image for presentation in swap chain after render pass
         colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
         VkAttachmentReference colorAttachmentRef = {};
-        colorAttachmentRef.attachment = 0;
+        colorAttachmentRef.attachment = 0; // attachment index
+        // since intend to use attachement to function as a color buffer
         colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
         VkSubpassDescription subpass = {};
+        // this is explicitly a graphics subpass
         subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
         subpass.colorAttachmentCount = 1;
         subpass.pColorAttachments = &colorAttachmentRef;
+        // The index of the attachment in this array is directly referenced
+        // from the fragment shader with the layout(location = 0) out vec4
+        // outColor directive!
 
         VkRenderPassCreateInfo renderPassInfo = {};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;

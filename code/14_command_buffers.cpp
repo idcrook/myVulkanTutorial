@@ -538,6 +538,16 @@ private:
         VkCommandPoolCreateInfo poolInfo = {};
         poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
         poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
+        //poolInfo.flags = 0; // Optional
+        // There are two possible flags for command pools:
+        //
+        // - VK_COMMAND_POOL_CREATE_TRANSIENT_BIT: Hint that command buffers
+        //   are rerecorded with new commands very often (may change memory
+        //   allocation behavior)
+        //
+        // - VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT: Allow command
+        //   buffers to be rerecorded individually, without this flag they all
+        //   have to be reset together
 
         if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to create command pool!");
@@ -550,7 +560,7 @@ private:
         VkCommandBufferAllocateInfo allocInfo = {};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.commandPool = commandPool;
-        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; // can be submitted directly; not callable from other buffers
         allocInfo.commandBufferCount = (uint32_t) commandBuffers.size();
 
         if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
@@ -560,11 +570,32 @@ private:
         for (size_t i = 0; i < commandBuffers.size(); i++) {
             VkCommandBufferBeginInfo beginInfo = {};
             beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+            // beginInfo.flags = 0; // Optional
+            // beginInfo.pInheritanceInfo = nullptr; // Optional
+            //
+            // The flags parameter specifies how we're going to use the command
+            // buffer. The following values are available:
+            //
+            // - VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT: The command
+            //   buffer will be rerecorded right after executing it once.
+            //
+            // - VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT: This is a
+            //   secondary command buffer that will be entirely within a single
+            //   render pass.
+            //
+            // - VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT: The command
+            //   buffer can be resubmitted while it is also already pending
+            //   execution.
+            //
+            // The pInheritanceInfo parameter is only relevant for secondary
+            // command buffers. It specifies which state to inherit from the
+            // calling primary command buffers.
 
             if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
                 throw std::runtime_error("failed to begin recording command buffer!");
             }
 
+            // config for renderpass below
             VkRenderPassBeginInfo renderPassInfo = {};
             renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
             renderPassInfo.renderPass = renderPass;
@@ -572,16 +603,28 @@ private:
             renderPassInfo.renderArea.offset = {0, 0};
             renderPassInfo.renderArea.extent = swapChainExtent;
 
+            // parameters for renderpass below
             VkClearValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
             renderPassInfo.clearValueCount = 1;
             renderPassInfo.pClearValues = &clearColor;
 
+            // not using secondary command buffers
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
+            {
                 vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-
                 vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+                // - vertexCount: Even though we don't have a vertex buffer, we
+                //   technically still have 3 vertices to draw.
 
+                // - instanceCount: Used for instanced rendering, use 1 if
+                //   you're not doing that.
+
+                // - firstVertex: Used as an offset into the vertex buffer,
+                //   defines the lowest value of gl_VertexIndex.
+
+                // - firstInstance: Used as an offset for instanced rendering,
+                //   defines the lowest value of gl_InstanceIndex.
+            }
             vkCmdEndRenderPass(commandBuffers[i]);
 
             if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {

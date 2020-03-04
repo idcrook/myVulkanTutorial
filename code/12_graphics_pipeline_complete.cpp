@@ -477,16 +477,27 @@ private:
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         pipelineInfo.stageCount = 2;
         pipelineInfo.pStages = shaderStages;
+        // all the functions for fixed-function stages
         pipelineInfo.pVertexInputState = &vertexInputInfo;
         pipelineInfo.pInputAssemblyState = &inputAssembly;
         pipelineInfo.pViewportState = &viewportState;
         pipelineInfo.pRasterizationState = &rasterizer;
         pipelineInfo.pMultisampleState = &multisampling;
+        // pipelineInfo.pDepthStencilState = nullptr; // Optional
         pipelineInfo.pColorBlendState = &colorBlending;
+        // pipelineInfo.pDynamicState = nullptr; // Optional
+
+        // vulkan handle
         pipelineInfo.layout = pipelineLayout;
+        // any other renderPass=s are required to be `compatible` with renderPass
         pipelineInfo.renderPass = renderPass;
-        pipelineInfo.subpass = 0;
-        pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+        pipelineInfo.subpass = 0; // index
+
+        pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // optional
+        // pipelineInfo.basePipelineIndex = -1; // Optional
+        // These values are only used if the VK_PIPELINE_CREATE_DERIVATIVE_BIT
+        // flag is also specified in the flags field of
+        // VkGraphicsPipelineCreateInfo.
 
         if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
             throw std::runtime_error("failed to create graphics pipeline!");
