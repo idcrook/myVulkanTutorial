@@ -47,8 +47,8 @@ set( SOURCES
   # code/06_swap_chain_creation.cpp
   # code/07_image_views.cpp
   # code/08_graphics_pipeline.cpp
-  code/09_shader_modules.cpp
-  # code/10_fixed_functions.cpp
+  # code/09_shader_modules.cpp
+  code/10_fixed_functions.cpp
   # code/11_render_passes.cpp
   # code/12_graphics_pipeline_complete.cpp
   # code/13_framebuffers.cpp
