@@ -96,7 +96,7 @@ struct Vertex {
 };
 
 const std::vector<Vertex> vertices = {
-    {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+    {{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
     {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
     {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
 };
@@ -681,6 +681,7 @@ private:
             throw std::runtime_error("failed to allocate vertex buffer memory!");
         }
 
+        // this memory (vertexBufferMemory) will need to be freed when done
         vkBindBufferMemory(device, vertexBuffer, vertexBufferMemory, 0);
 
         void* data;
@@ -741,6 +742,11 @@ private:
                 VkBuffer vertexBuffers[] = {vertexBuffer};
                 VkDeviceSize offsets[] = {0};
                 vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+                // The first two parameters, besides the command buffer,
+                // specify the offset and number of bindings we're going to
+                // specify vertex buffers for. The last two parameters specify
+                // the array of vertex buffers to bind and the byte offsets to
+                // start reading vertex data from
 
                 vkCmdDraw(commandBuffers[i], static_cast<uint32_t>(vertices.size()), 1, 0, 0);
 
