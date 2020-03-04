@@ -56,9 +56,9 @@ set( SOURCES
   # code/15_hello_triangle.cpp
   # code/16_swap_chain_recreation.cpp
   # code/17_vertex_input.cpp
-  code/18_vertex_buffer.cpp
+  # code/18_vertex_buffer.cpp
   # code/19_staging_buffer.cpp
-  # code/20_index_buffer.cpp
+  code/20_index_buffer.cpp
   # code/21_descriptor_layout.cpp
   # code/21_shader_ubo.frag
   # code/21_shader_ubo.vert
