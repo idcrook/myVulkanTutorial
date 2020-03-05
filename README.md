@@ -3,6 +3,8 @@ vulkan tutorial
 
 based on https://vulkan-tutorial.com/
 
+![29_multisampling](models/29_multisampling.png)
+
 pre-reqs
 --------
 
