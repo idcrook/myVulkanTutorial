@@ -765,7 +765,7 @@ private:
         imageInfo.imageType = VK_IMAGE_TYPE_2D;
         imageInfo.extent.width = width;
         imageInfo.extent.height = height;
-        imageInfo.extent.depth = 1;
+        imageInfo.extent.depth = 1; // how many texels on neach axis
         imageInfo.mipLevels = 1;
         imageInfo.arrayLayers = 1;
         imageInfo.format = format;

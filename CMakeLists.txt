@@ -60,8 +60,8 @@ set( SOURCES
   # code/19_staging_buffer.cpp
   # code/20_index_buffer.cpp
   # code/21_descriptor_layout.cpp
-  code/22_descriptor_sets.cpp
-  # code/23_texture_image.cpp
+  # code/22_descriptor_sets.cpp
+  code/23_texture_image.cpp
   # code/24_sampler.cpp
   # code/25_texture_mapping.cpp
   # code/26_depth_buffering.cpp
@@ -118,6 +118,11 @@ add_executable(vulTut
   ${SOURCES}
 )
 
+target_include_directories(vulTut PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty>
+  # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty>
+)
+
 add_shader_spv(vulTut
   SOURCE "${VERTEX_SHADER}"
   SHADER_STAGE vert
@@ -129,6 +134,7 @@ add_shader_spv(vulTut
   SHADER_STAGE frag
   OUTPUT_PATH "${CMAKE_SOURCE_DIR}/shaders/frag.spv"
   )
+
 
 target_link_libraries(vulTut PUBLIC
   Vulkan::Vulkan
