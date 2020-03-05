@@ -58,10 +58,8 @@ set( SOURCES
   # code/17_vertex_input.cpp
   # code/18_vertex_buffer.cpp
   # code/19_staging_buffer.cpp
-  code/20_index_buffer.cpp
-  # code/21_descriptor_layout.cpp
-  # code/21_shader_ubo.frag
-  # code/21_shader_ubo.vert
+  # code/20_index_buffer.cpp
+  code/21_descriptor_layout.cpp
   # code/22_descriptor_sets.cpp
   # code/23_texture_image.cpp
   # code/24_sampler.cpp
@@ -75,14 +73,16 @@ set( SOURCES
 # Expect only one shader per category to be active at a time
 set (VERTEX_SHADER
   # ${CMAKE_SOURCE_DIR}/shaders/09_shader_base.vert
-  ${CMAKE_SOURCE_DIR}/shaders/17_shader_vertexbuffer.vert
+  # ${CMAKE_SOURCE_DIR}/shaders/17_shader_vertexbuffer.vert
+  ${CMAKE_SOURCE_DIR}/shaders/21_shader_ubo.vert
   # ${CMAKE_SOURCE_DIR}/shaders/25_shader_textures.vert
   # ${CMAKE_SOURCE_DIR}/shaders/26_shader_depth.vert
   )
 
 set (FRAGMENT_SHADER
   # ${CMAKE_SOURCE_DIR}/shaders/09_shader_base.frag
-  ${CMAKE_SOURCE_DIR}/shaders/17_shader_vertexbuffer.frag
+  # ${CMAKE_SOURCE_DIR}/shaders/17_shader_vertexbuffer.frag
+  ${CMAKE_SOURCE_DIR}/shaders/21_shader_ubo.frag
   # ${CMAKE_SOURCE_DIR}/shaders/25_shader_textures.frag
   # ${CMAKE_SOURCE_DIR}/shaders/26_shader_depth.frag
   )
