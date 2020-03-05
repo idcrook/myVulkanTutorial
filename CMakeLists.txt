@@ -59,8 +59,8 @@ set( SOURCES
   # code/18_vertex_buffer.cpp
   # code/19_staging_buffer.cpp
   # code/20_index_buffer.cpp
-  code/21_descriptor_layout.cpp
-  # code/22_descriptor_sets.cpp
+  # code/21_descriptor_layout.cpp
+  code/22_descriptor_sets.cpp
   # code/23_texture_image.cpp
   # code/24_sampler.cpp
   # code/25_texture_mapping.cpp
