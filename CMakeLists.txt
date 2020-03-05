@@ -62,8 +62,8 @@ set( SOURCES
   # code/21_descriptor_layout.cpp
   # code/22_descriptor_sets.cpp
   # code/23_texture_image.cpp
-  code/24_sampler.cpp
-  # code/25_texture_mapping.cpp
+  # code/24_sampler.cpp
+  code/25_texture_mapping.cpp
   # code/26_depth_buffering.cpp
   # code/27_model_loading.cpp
   # code/28_mipmapping.cpp
@@ -74,16 +74,16 @@ set( SOURCES
 set (VERTEX_SHADER
   # ${CMAKE_SOURCE_DIR}/shaders/09_shader_base.vert
   # ${CMAKE_SOURCE_DIR}/shaders/17_shader_vertexbuffer.vert
-  ${CMAKE_SOURCE_DIR}/shaders/21_shader_ubo.vert
-  # ${CMAKE_SOURCE_DIR}/shaders/25_shader_textures.vert
+  # ${CMAKE_SOURCE_DIR}/shaders/21_shader_ubo.vert
+  ${CMAKE_SOURCE_DIR}/shaders/25_shader_textures.vert
   # ${CMAKE_SOURCE_DIR}/shaders/26_shader_depth.vert
   )
 
 set (FRAGMENT_SHADER
   # ${CMAKE_SOURCE_DIR}/shaders/09_shader_base.frag
   # ${CMAKE_SOURCE_DIR}/shaders/17_shader_vertexbuffer.frag
-  ${CMAKE_SOURCE_DIR}/shaders/21_shader_ubo.frag
-  # ${CMAKE_SOURCE_DIR}/shaders/25_shader_textures.frag
+  # ${CMAKE_SOURCE_DIR}/shaders/21_shader_ubo.frag
+  ${CMAKE_SOURCE_DIR}/shaders/25_shader_textures.frag
   # ${CMAKE_SOURCE_DIR}/shaders/26_shader_depth.frag
   )
 
@@ -120,7 +120,6 @@ add_executable(vulTut
 
 target_include_directories(vulTut PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty>
-  # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty>
 )
 
 add_shader_spv(vulTut
