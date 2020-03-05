@@ -66,8 +66,8 @@ set( SOURCES
   # code/25_texture_mapping.cpp
   # code/26_depth_buffering.cpp
   # code/27_model_loading.cpp
-  code/28_mipmapping.cpp
-  # code/29_multisampling.cpp
+  # code/28_mipmapping.cpp
+  code/29_multisampling.cpp
   )
 
 # Expect only one shader per category to be active at a time
