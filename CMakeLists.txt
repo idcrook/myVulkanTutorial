@@ -64,8 +64,8 @@ set( SOURCES
   # code/23_texture_image.cpp
   # code/24_sampler.cpp
   # code/25_texture_mapping.cpp
-  code/26_depth_buffering.cpp
-  # code/27_model_loading.cpp
+  # code/26_depth_buffering.cpp
+  code/27_model_loading.cpp
   # code/28_mipmapping.cpp
   # code/29_multisampling.cpp
   )
